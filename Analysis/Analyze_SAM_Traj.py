@@ -10,6 +10,7 @@ import time
 from scipy.signal import argrelextrema
 import sys
 import Configure
+import os
 
 Masses = [32.060, 12.011, 12.011, 15.99, 12.011, 1.008, 196.960]
 # The Amide_11_1 gives a problem here so if the masses are actually needed for something, that will need to be taken into account
@@ -131,7 +132,7 @@ class Trajectory(object):
         instance variables: Num_Snaps, Snap_List
         """
     
-    def __init__(self, File_Name):
+    def __init__(self, File_Name, molName):
         File = open(File_Name,'r')
         File_Lines = File.readlines()
         Temp_Snap_List = []
@@ -194,7 +195,7 @@ class Trajectory(object):
         # Set instance variables
         self.Num_Snaps = len(Temp_Snap_List)
         self.Snap_Shot_List = Temp_Snap_List
-        plt.plot(bins[0:-1]*100 - 7.6, n/(float(self.Num_Snaps)*5670.), linewidth=5, label=File_Name.split('_')[1])
+        plt.plot(bins[0:-1]*100 - 7.6, n/(float(self.Num_Snaps)*5670.), linewidth=5, label=molName)
         for i in range(1,len(n)):
             if n[i] == 0.0 and n[i-1] != 0.0:
                 self.height = (bins[i])*100 - 7.6
@@ -219,12 +220,22 @@ def main():
     TrajObjects = []
     for i in range(1,8):
         mol = molclass + str(i)
+        print "Adding mol: " + str(mol)
         molrespath = respath + mol + "/"
+        latest_traj = 0
+        # for j in range(1,7):
+        #     if (os.path.exists(molrespath+mol+"_" + str(j) + ".lammpstrj")):
+        #         latest_traj = j
+        # print "Latest traj is: " + str(latest_traj)
         try:
-            TrajObjects.append(Trajectory(molrespath+mol+"_6.lammpstrj"))
+            TrajObjects.append(Trajectory(molrespath+mol+"_3" + ".lammpstrj", mol))
+            print "Success"
         except:
+            print "Did not find file"
             continue
+        
     plt.show()
+    plt.savefig("molclassCarbonDensity.png")
     
     # numc = []
     # height = []
