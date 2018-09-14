@@ -2,6 +2,7 @@
 
 import Atom
 from Configure import Results_Path as resPath
+from Configure import Aromodel_Path as aroPath
 import Molecule
 import OPLS
 import System
@@ -29,10 +30,22 @@ def main():
     # print sys.argv
     try:
         scriptName, surface, molClass, mol= sys.argv
-        os.system("ttab python Aromodel.py " + surface + " " + molClass + " " + mol + " RunningTab")
+        cmd = "ttab python " + aroPath + "/Aromodel.py " + surface + " " + molClass + " " + mol + " RunningTab"
+        print cmd
+        os.system(cmd)
     except:
         scriptName, surface, molClass, mol, thistab = sys.argv
         run(mol, surface, molClass)
+    # try:
+    #     print "trying"
+    #     scriptName, surface, molClass, mol= sys.argv
+    #     print "tried!"
+    #     cmd = "ttab python " + Configure.Aromodel_Path + "/Aromodel.py " + surface + " " + molClass + " " + mol + " RunningTab"
+    #     print cmd
+    #     os.system(cmd)
+    # except:
+    #     scriptName, surface, molClass, mol, thistab = sys.argv
+    #     run(mol, surface, molClass)
     # molFile = 'OEG2.xyz'
     # surfaceFile = 'gold.data'
     # Name = 'OEG2'

@@ -10,6 +10,7 @@ import Configure
 import Parallel
 import pickle
 import Bond
+import dataReader
 # Class defining an MD system for simulation of SAMS with LAMMPS
 
 class SAM(object):
@@ -237,17 +238,6 @@ class SAM(object):
             # print self.ResultPath +"/" self.Data_File
         return
 
-    # helper function for creating common lj/cut/coul/long pair coefficients
-    def pair_coeff(self, i, j, a, b):
-        return "pair_coeff " + str(i) + " " + str(j) + " lj/cut/coul/long " + str(a) + " " + str(b)
-    
-    # helper function to create common lj/cut/coul/long pair coefficients using an array
-    def pair_string_from_array(self,pair_coeff_array):
-        ret = ""
-        for pair_coeff in pair_coeff_array:
-            ret += pair_coeff + "\n"
-        return ret
-
     # returns the dynamic type elements 1,2,3,...(gold_type-1)
     def dynamictype(self, gold_type):
         ret = ""
@@ -273,11 +263,14 @@ class SAM(object):
         # print "Mol List: " + str(self.Molecule_List)
 
 
-        pair_coeff_array = [self.pair_coeff(1,1,.390,.4250),self.pair_coeff(2,2,0.066,3.500),self.pair_coeff(3,3,0.066,3.500), self.pair_coeff(4,4,.170,3.000),self.pair_coeff(5,5,.066,3.500),self.pair_coeff(6,6,.030,2.500),self.pair_coeff(7,7,.039,2.935)]
-        print "pair_coeff_array is: " + str(pair_coeff_array)
-        pair_string = self.pair_string_from_array(pair_coeff_array)
-        print pair_string
-        print "atom_params: " + str(self.Atom_Params)
+        pair_string = ""
+        i = 1
+        for Params in self.Atom_Params:
+            pair_string += 'pair_coeff %d %d lj/cut/coul/long %.3f %.3f\n' % (i, i, Params[2], Params[1])
+            i += 1
+
+        print "Pair string is: \n" + pair_string
+        # print "atom_params: " + str(self.Atom_Params)
         gold_type = len(self.Atom_Params)
         print "gold type is: " + str(gold_type)
         dynamic_type = self.dynamictype(gold_type)
@@ -356,10 +349,11 @@ class SAM(object):
             New_Restart = 'restart.%s_%d_%d' % (self.Name, Temp_Out, count)
         with open(NPT_Temp) as f:
                 template = f.read()
-        pair_coeff_array = [self.pair_coeff(1,1,.390,.4250),self.pair_coeff(2,2,0.066,3.500),self.pair_coeff(3,3,0.066,3.500), self.pair_coeff(4,4,.170,3.000),self.pair_coeff(5,5,.066,3.500),self.pair_coeff(6,6,.030,2.500),self.pair_coeff(7,7,.039,2.935)]
-        print "pair_coeff_array is: " + str(pair_coeff_array)
-        pair_string = self.pair_string_from_array(pair_coeff_array)
-        print pair_string
+        pair_string = ""
+        i = 1
+        for Params in self.Atom_Params:
+            pair_string += 'pair_coeff %d %d lj/cut/coul/long %.3f %.3f\n' % (i, i, Params[2], Params[1])
+            i += 1
         print "atom_params: " + str(self.Atom_Params)
         gold_type = len(self.Atom_Params)
         print "gold type is: " + str(gold_type)
