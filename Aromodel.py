@@ -27,13 +27,16 @@ import DataFilesHandler as data
 
 def main():
     # print sys.argv
-    scriptName, mol, surface, molClass = sys.argv
+    try:
+        scriptName, mol, surface, molClass = sys.argv
+        os.system("ttab python Aromodel.py " + mol + " " + surface + " " + molClass + " Running Tab")
+    except:
+        scriptName, mol, surface, molClass, newtab = sys.argv
     # molFile = 'OEG2.xyz'
     # surfaceFile = 'gold.data'
     # Name = 'OEG2'
     # print (molFile, surfaceFile, Name)
-    # run(molFile, surfaceFile, Name)
-    run(mol,surface, molClass)
+    run(mol, surface, molClass)
 
 def resultPath(mol, molClass):
     target = resPath + molClass + "/" + mol + "/"

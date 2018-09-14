@@ -8,6 +8,8 @@ import matplotlib as mpl
 from pylab import rcParams
 import time
 from scipy.signal import argrelextrema
+import sys
+import Configure
 
 Masses = [32.060, 12.011, 12.011, 15.99, 12.011, 1.008, 196.960]
 # The Amide_11_1 gives a problem here so if the masses are actually needed for something, that will need to be taken into account
@@ -209,8 +211,19 @@ class Trajectory(object):
         plt.xlim((0,25))
         return
 
+
+
 def main():
-    Traj_Object1 = Trajectory('OEG2/OEG2_3.lammpstrj')
+    scriptname, molclass = sys.argv 
+    respath = Configure.Results_Path + molclass + "/"
+    TrajObjects = []
+    for i in range(1,8):
+        mol = molclass + str(i)
+        molrespath = respath + mol + "/"
+        try:
+            TrajObjects.append(Trajectory(molrespath+mol+"_6.lammpstrj"))
+        except:
+            continue
     plt.show()
     
     # numc = []

@@ -17,7 +17,12 @@ MolFiles_Path = DataFiles_Path + "MolFiles/"
 
 Results_Path = Research_Path + "/Results/"
 
-
+def resultPath(mol, molClass):
+    target = resPath + molClass + "/" + mol + "/"
+    if (not (os.path.exists(target))):   
+        os.mkdir(target)
+    # else:
+    os.chdir(target)
 
 # Remote Paths
 Comet_Login = "trahman2@comet.sdsc.edu"
