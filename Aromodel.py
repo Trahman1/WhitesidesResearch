@@ -29,7 +29,7 @@ def main():
     # print sys.argv
     try:
         scriptName, surface, molClass, mol= sys.argv
-        os.system("ttab python Aromodel.py " + surface + " " + molClass + " " + mol + " RunningTab")
+        os.system("ttab python " + Configure.Aromodel_Path + "/Aromodel.py" + surface + " " + molClass + " " + mol + " RunningTab")
     except:
         scriptName, surface, molClass, mol, thistab = sys.argv
         run(mol, surface, molClass)
