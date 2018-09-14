@@ -1,0 +1,305 @@
+
+                                 *****************
+                                 * O   R   C   A *
+                                 *****************
+
+           --- An Ab Initio, DFT and Semiempirical electronic structure package ---
+
+                  #######################################################
+                  #                        -***-                        #
+                  #  Department of molecular theory and spectroscopy    #
+                  #              Directorship: Frank Neese              #
+                  # Max Planck Institute for Chemical Energy Conversion #
+                  #                  D-45470 Muelheim/Ruhr              #
+                  #                       Germany                       #
+                  #                                                     #
+                  #                  All rights reserved                #
+                  #                        -***-                        #
+                  #######################################################
+
+
+                         Program Version 4.0.1.2 - RELEASE -
+
+
+ With contributions from (in alphabetic order):
+   Daniel Aravena         : Magnetic Properties
+   Michael Atanasov       : Ab Initio Ligand Field Theory
+   Ute Becker             : Parallelization
+   Martin Brehm           : Molecular dynamics
+   Dmytro Bykov           : SCF Hessian
+   Vijay G. Chilkuri      : MRCI spin determinant printing
+   Dipayan Datta          : RHF DLPNO-CCSD density
+   Achintya Kumar Dutta   : EOM-CC, STEOM-CC
+   Dmitry Ganyushin       : Spin-Orbit,Spin-Spin,Magnetic field MRCI
+   Yang Guo               : DLPNO-NEVPT2, CIM, IAO-localization
+   Andreas Hansen         : Spin unrestricted coupled pair/coupled cluster methods
+   Lee Huntington         : MR-EOM, pCC
+   Robert Izsak           : Overlap fitted RIJCOSX, COSX-SCS-MP3, EOM
+   Christian Kollmar      : KDIIS, OOCD, Brueckner-CCSD(T), CCSD density
+   Simone Kossmann        : Meta GGA functionals, TD-DFT gradient, OOMP2, MP2 Hessian
+   Martin Krupicka        : AUTO-CI
+   Dagmar Lenk            : GEPOL surface
+   Dimitrios Liakos       : Extrapolation schemes; parallel MDCI
+   Dimitrios Manganas     : ROCIS; embedding schemes
+   Dimitrios Pantazis     : SARC Basis sets
+   Taras Petrenko         : DFT Hessian,TD-DFT gradient, ASA, ECA, R-Raman, ABS, FL, XAS/XES, NRVS
+   Peter Pinski           : DLPNO-MP2
+   Christoph Reimann      : Effective Core Potentials
+   Marius Retegan         : Local ZFS, SOC
+   Christoph Riplinger    : Optimizer, TS searches, QM/MM, DLPNO-CCSD(T), (RO)-DLPNO pert. Triples
+   Tobias Risthaus        : Range-separated hybrids, TD-DFT gradient, RPA, STAB
+   Michael Roemelt        : Restricted open shell CIS
+   Masaaki Saitow         : Open-shell DLPNO
+   Barbara Sandhoefer     : DKH picture change effects
+   Kantharuban Sivalingam : CASSCF convergence, NEVPT2, FIC-MRCI
+   Georgi Stoychev        : AutoAux
+   Boris Wezisla          : Elementary symmetry handling
+   Frank Wennmohs         : Technical directorship
+
+
+ We gratefully acknowledge several colleagues who have allowed us to
+ interface, adapt or use parts of their codes:
+   Stefan Grimme, W. Hujo, H. Kruse,             : VdW corrections, initial TS optimization,
+                  C. Bannwarth                     DFT functionals, gCP, sTDA/sTD-DF
+   Ed Valeev                                     : LibInt (2-el integral package), F12 methods
+   Garnet Chan, S. Sharma, J. Yang, R. Olivares  : DMRG
+   Ulf Ekstrom                                   : XCFun DFT Library
+   Mihaly Kallay                                 : mrcc  (arbitrary order and MRCC methods)
+   Andreas Klamt, Michael Diedenhofen            : otool_cosmo (COSMO solvation model)
+   Jiri Pittner, Ondrej Demel                    : Mk-CCSD
+   Frank Weinhold                                : gennbo (NPA and NBO analysis)
+   Christopher J. Cramer and Donald G. Truhlar   : smd solvation model
+
+
+ Your calculation uses the libint2 library for the computation of 2-el integrals
+ For citations please refer to: http://libint.valeyev.net
+
+ This ORCA versions uses:
+   CBLAS   interface :  Fast vector & matrix operations
+   LAPACKE interface :  Fast linear algebra routines
+   SCALAPACK package :  Parallel linear algebra routines
+
+
+Your calculation utilizes the basis: 6-31+G**
+   H-He, Li-Ne : W. J. Hehre, R. Ditchfield and J.A. Pople, J. Chem. Phys. 56, 2257 (1972).
+                 Note: He and Ne are unpublished basis sets taken from the Gaussian program.
+                 Note: Li and B from J. D. Dill and J. A. Pople, J. Chem. Phys. 62, 2921 (1975).
+   Na - Ar     : M. M. Francl, W. J. Pietro, W. J. Hehre, J. S. Binkley, M. S. Gordon, 
+                 D. J. DeFrees and J. A. Pople, J. Chem. Phys. 77, 3654 (1982).
+   K - Zn      : V. A. Rassolov, J. A. Pople, M. A. Ratner, and T. L. Windus, J. Chem. Phys. 109, 1223 (1998).
+   Additional Pol./Diff. from the 6-311G equivalent.
+
+================================================================================
+                                        WARNINGS
+                       Please study these warnings very carefully!
+================================================================================
+
+Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+
+WARNING: Geometry Optimization
+  ===> : Switching off AutoStart
+         For restart on a previous wavefunction, please use MOREAD
+
+INFO   : the flag for use of LIBINT has been found!
+
+================================================================================
+                                       INPUT FILE
+================================================================================
+NAME = OEG1.inp
+|  1> ! RKS B3LYP 6-31+G** NormalSCF Opt NOSOSCF CHELPG
+|  2> 
+|  3> *xyz 0 1
+|  4> S -0.56975 -0.24397 -0.41096
+|  5> C 1.26946 -0.22560 -0.38447
+|  6> C 1.77067 0.57987 0.81859
+|  7> O 3.20863 0.58341 0.82309
+|  8> C 3.70881 1.32211 1.92616
+|  9> H 1.69986 0.20883 -1.29561
+| 10> H 1.70036 -1.23334 -0.33025
+| 11> H 1.41792 0.13483 1.75787
+| 12> H 1.41737 1.61769 0.76529
+| 13> H 4.80131 1.29806 1.88980
+| 14> H 3.38285 0.87406 2.86988
+| 15> H 3.38245 2.36523 1.87145
+| 16> **                         ****END OF INPUT****
+================================================================================
+
+                       *****************************
+                       * Geometry Optimization Run *
+                       *****************************
+
+Geometry optimization settings:
+Update method            Update   .... BFGS
+Choice of coordinates    CoordSys .... Redundant Internals
+Initial Hessian          InHess   .... Almoef's Model
+
+Convergence Tolerances:
+Energy Change            TolE     ....  5.0000e-06 Eh
+Max. Gradient            TolMAXG  ....  3.0000e-04 Eh/bohr
+RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
+Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
+RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
+
+------------------------------------------------------------------------------
+                        ORCA OPTIMIZATION COORDINATE SETUP
+------------------------------------------------------------------------------
+
+The optimization will be done in new redundant internal coordinates
+Making redundant internal coordinates   ...  (new redundants) done
+Evaluating the initial hessian          ...  (Almloef) done
+Evaluating the coordinates              ...  done
+Calculating the B-matrix                .... done
+Calculating the G-matrix                .... done
+Diagonalizing the G-matrix              .... done
+The first mode is                       ....   15
+The number of degrees of freedom        ....   30
+
+    -----------------------------------------------------------------
+                    Redundant Internal Coordinates
+
+
+    -----------------------------------------------------------------
+         Definition                    Initial Value    Approx d2E/dq
+    -----------------------------------------------------------------
+      1. B(C   1,S   0)                  1.8395         0.323124   
+      2. B(C   2,C   1)                  1.5321         0.370697   
+      3. B(O   3,C   2)                  1.4380         0.469181   
+      4. B(C   4,O   3)                  1.4187         0.503659   
+      5. B(H   5,C   1)                  1.0973         0.350523   
+      6. B(H   6,C   1)                  1.0973         0.350520   
+      7. B(H   7,C   2)                  1.0976         0.350177   
+      8. B(H   8,C   2)                  1.0976         0.350181   
+      9. B(H   9,C   4)                  1.0934         0.355670   
+     10. B(H  10,C   4)                  1.0944         0.354389   
+     11. B(H  11,C   4)                  1.0944         0.354390   
+     12. A(C   2,C   1,H   5)          108.3940         0.322478   
+     13. A(S   0,C   1,C   2)          110.0992         0.372630   
+     14. A(C   2,C   1,H   6)          108.3936         0.322478   
+     15. A(S   0,C   1,H   6)          112.5914         0.331221   
+     16. A(S   0,C   1,H   5)          112.5915         0.331221   
+     17. A(H   5,C   1,H   6)          104.5118         0.288391   
+     18. A(H   7,C   2,H   8)          108.7529         0.288303   
+     19. A(O   3,C   2,H   8)          108.6451         0.333187   
+     20. A(C   1,C   2,H   8)          110.7114         0.322427   
+     21. A(O   3,C   2,H   7)          108.6447         0.333186   
+     22. A(C   1,C   2,H   7)          110.7117         0.322426   
+     23. A(C   1,C   2,O   3)          109.3226         0.374994   
+     24. A(C   2,O   3,C   4)          110.8721         0.393018   
+     25. A(O   3,C   4,H  10)          110.6289         0.337809   
+     26. A(O   3,C   4,H   9)          108.3596         0.338012   
+     27. A(H  10,C   4,H  11)          110.1536         0.289384   
+     28. A(H   9,C   4,H  11)          108.4991         0.289548   
+     29. A(O   3,C   4,H  11)          110.6285         0.337809   
+     30. A(H   9,C   4,H  10)          108.4992         0.289548   
+     31. D(O   3,C   2,C   1,H   6)     56.4432         0.010983   
+     32. D(O   3,C   2,C   1,H   5)    -56.4408         0.010983   
+     33. D(H   7,C   2,C   1,S   0)     60.3466         0.010983   
+     34. D(H   7,C   2,C   1,H   6)    -63.2111         0.010983   
+     35. D(H   8,C   2,C   1,S   0)    -60.3443         0.010983   
+     36. D(O   3,C   2,C   1,S   0)   -179.9990         0.010983   
+     37. D(H   8,C   2,C   1,H   5)     63.2138         0.010983   
+     38. D(H   8,C   2,C   1,H   6)    176.0979         0.010983   
+     39. D(H   7,C   2,C   1,H   5)   -176.0952         0.010983   
+     40. D(C   4,O   3,C   2,H   8)     59.0742         0.017351   
+     41. D(C   4,O   3,C   2,H   7)    -59.0856         0.017351   
+     42. D(C   4,O   3,C   2,C   1)    179.9942         0.017351   
+     43. D(H  11,C   4,O   3,C   2)    -61.1797         0.020064   
+     44. D(H  10,C   4,O   3,C   2)     61.1694         0.020064   
+     45. D(H   9,C   4,O   3,C   2)    179.9951         0.020064   
+    -----------------------------------------------------------------
+
+Number of atoms                         .... 12
+Number of degrees of freedom            .... 45
+
+         *************************************************************
+         *                GEOMETRY OPTIMIZATION CYCLE   1            *
+         *************************************************************
+---------------------------------
+CARTESIAN COORDINATES (ANGSTROEM)
+---------------------------------
+  S     -0.569750   -0.243970   -0.410960
+  C      1.269460   -0.225600   -0.384470
+  C      1.770670    0.579870    0.818590
+  O      3.208630    0.583410    0.823090
+  C      3.708810    1.322110    1.926160
+  H      1.699860    0.208830   -1.295610
+  H      1.700360   -1.233340   -0.330250
+  H      1.417920    0.134830    1.757870
+  H      1.417370    1.617690    0.765290
+  H      4.801310    1.298060    1.889800
+  H      3.382850    0.874060    2.869880
+  H      3.382450    2.365230    1.871450
+
+----------------------------
+CARTESIAN COORDINATES (A.U.)
+----------------------------
+  NO LB      ZA    FRAG     MASS         X           Y           Z
+   0 S    16.0000    0    32.060   -1.076671   -0.461036   -0.776602
+   1 C     6.0000    0    12.011    2.398932   -0.426322   -0.726543
+   2 C     6.0000    0    12.011    3.346081    1.095795    1.546911
+   3 O     8.0000    0    15.999    6.063432    1.102485    1.555415
+   4 C     6.0000    0    12.011    7.008635    2.498426    3.639915
+   5 H     1.0000    0     1.008    3.212270    0.394632   -2.448348
+   6 H     1.0000    0     1.008    3.213215   -2.330675   -0.624082
+   7 H     1.0000    0     1.008    2.679480    0.254792    3.321893
+   8 H     1.0000    0     1.008    2.678441    3.056991    1.446189
+   9 H     1.0000    0     1.008    9.073161    2.452978    3.571204
+  10 H     1.0000    0     1.008    6.392660    1.651734    5.423287
+  11 H     1.0000    0     1.008    6.391904    4.469637    3.536528
+
+--------------------------------
+INTERNAL COORDINATES (ANGSTROEM)
+--------------------------------
+ S      0   0   0     0.000000000000     0.00000000     0.00000000
+ C      1   0   0     1.839492484654     0.00000000     0.00000000
+ C      2   1   0     1.532105332084   110.09915920     0.00000000
+ O      3   2   1     1.437971398603   109.32262413   180.00100951
+ C      4   3   2     1.418668794081   110.87205163   179.99424703
+ H      2   1   3     1.097337543557   112.59149243   238.92238029
+ H      2   1   3     1.097339749576   112.59142386   121.07697647
+ H      3   2   1     1.097606524443   110.71170848    60.34662314
+ H      3   2   1     1.097602902875   110.71142605   299.65568626
+ H      5   4   3     1.093369426178   108.35955390   179.99508368
+ H      5   4   3     1.094351937221   110.62893270    61.16942568
+ H      5   4   3     1.094350660483   110.62852515   298.82032852
+
+---------------------------
+INTERNAL COORDINATES (A.U.)
+---------------------------
+ S      0   0   0     0.000000000000     0.00000000     0.00000000
+ C      1   0   0     3.476137021403     0.00000000     0.00000000
+ C      2   1   0     2.895259485959   110.09915920     0.00000000
+ O      3   2   1     2.717372131771   109.32262413   180.00100951
+ C      4   3   2     2.680895495554   110.87205163   179.99424703
+ H      2   1   3     2.073667433793   112.59149243   238.92238029
+ H      2   1   3     2.073671602565   112.59142386   121.07697647
+ H      3   2   1     2.074175734003   110.71170848    60.34662314
+ H      3   2   1     2.074168890231   110.71142605   299.65568626
+ H      5   4   3     2.066168778678   108.35955390   179.99508368
+ H      5   4   3     2.068025455474   110.62893270    61.16942568
+ H      5   4   3     2.068023042789   110.62852515   298.82032852
+
+---------------------
+BASIS SET INFORMATION
+---------------------
+There are 4 groups of distinct atoms
+
+ Group   1 Type S   : 17s11p1d contracted to 5s4p1d pattern {66311/6311/1}
+ Group   2 Type C   : 11s5p1d contracted to 4s3p1d pattern {6311/311/1}
+ Group   3 Type O   : 11s5p1d contracted to 4s3p1d pattern {6311/311/1}
+ Group   4 Type H   : 4s1p contracted to 2s1p pattern {31/1}
+
+Atom   0S    basis set group =>   1
+Atom   1C    basis set group =>   2
+Atom   2C    basis set group =>   2
+Atom   3O    basis set group =>   3
+Atom   4C    basis set group =>   2
+Atom   5H    basis set group =>   4
+Atom   6H    basis set group =>   4
+Atom   7H    basis set group =>   4
+Atom   8H    basis set group =>   4
+Atom   9H    basis set group =>   4
+Atom  10H    basis set group =>   4
+Atom  11H    basis set group =>   4
+[file orca_main/mainfcts.cpp, line 334]: Error : multiplicity (1) is odd and number of electrons (49) is odd -> impossible
+

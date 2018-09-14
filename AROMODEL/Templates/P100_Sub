@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name="{Sim_Name}"
+#SBATCH --output="{Sim_Name}.%j.%N.out"
+#SBATCH --partition=gpu
+#SBATCH --nodes={Nodes}
+#SBATCH --ntasks-per-node={tpn}
+#SBATCH --no-requeue
+#SBATCH --gres=gpu:p100:4
+#SBATCH -t 48:00:00
+#SBATCH -A csd467
+cd {path}
+export MODULEPATH=/share/apps/compute/modulefiles/applications:$MODULEPATH
+module unload intel
+module load lammps/20170331-intelmpi
+module load cuda/8.0
+
+exe=`which lammps.cuda`
+
+processors=$(( $SLURM_NNODES * $SLURM_NTASKS_PER_NODE ))
+mpirun  -np $processors -genv I_MPI_FABRICS shm:ofa  $exe -sf gpu -pk gpu 4 -in in.{Sim_Name}    > log.{Sim_Name}

@@ -1,0 +1,53 @@
+processors 4 3 1
+units real
+atom_style full
+boundary p p f
+bond_style harmonic
+dielectric 1.0
+pair_style lj/cut/coul/long 12.0
+angle_style harmonic
+dihedral_style opls
+special_bonds lj/coul 0 0 .5
+improper_style cvff
+kspace_style ewald 1e-4
+kspace_modify slab nozforce
+read_data data.{System_Name}
+thermo_style custom step temp press ke pe etotal density
+
+
+pair_style hybrid/overlay lj/cut/coul/long 12.0 morse 12.0
+{pair_string}
+
+pair_modify pair lj/cut/coul/long mix geometric 
+pair_coeff  1 {gold_type} morse 8.763 1.47 2.65
+neighbor 10.0 bin
+neigh_modify every 1 delay 0 one 30000 page 300000
+group gold type {gold_type}
+group thiol type 1
+group dynamic type {dynamic_type} 
+fix 4 gold setforce 0.0 0.0 0.0
+#fix 5 thiol setforce 0.0 0.0 0.0
+#minimize 1.0e-4 1.0e-6 100 1000
+#unfix 5
+minimize 1.0e-4 1.0e-6 100 1000
+
+dump 1 all custom 10000 Init_{System_Name}.lammpstrj id type mol xs ys zs
+
+fix walllo dynamic wall/lj93 zlo EDGE 100.0 1.0 50.0
+fix wallref dynamic wall/reflect zlo 6.7 units box
+fix 0 dynamic langevin 0. 300. 100.0 43294
+fix 1 dynamic nve/limit .01
+fix 2 dynamic momentum 1 linear 1 1 1
+fix loadbalance all balance 1000 1.05 shift z 10 1.05
+timestep 1
+thermo 100
+run 100000
+unfix 1
+unfix 0
+fix 1 dynamic nve
+fix 0 dynamic langevin 300. 400. 100.0 43294 
+run 100000
+unfix 1
+unfix 2
+write_restart restart.{System_Name}_init_1
+

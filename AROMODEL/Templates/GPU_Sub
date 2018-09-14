@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name="lammpsgpu"
+#SBATCH --output="{Sim_Name}"
+#SBATCH --partition=gpu
+#SBATCH --nodes={Nodes}
+#SBATCH --ntasks-per-node={tpn}
+#SBATCH --no-requeue
+#SBATCH --gres=gpu:k80:4
+#SBATCH -t 48:00:00
+#SBATCH -A csd467
+export MODULEPATH=/share/apps/compute/modulefiles/applications:$MODULEPATH
+module unload intel
+module unload mvapich2_1b
+module load lammps/20170331
+module load cuda/7.5
+cd {path}
+
+ibrun -np {NProcs} /oasis/scratch/comet/andrewk/temp_project/Mod_Lammps/lammps-11Aug17/src/lmp_gpu -sf gpu -pk gpu 4 -in in.{Sim_Name} > log.{Sim_Name}
+
+

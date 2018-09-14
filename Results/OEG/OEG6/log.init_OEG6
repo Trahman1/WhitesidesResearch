@@ -1,0 +1,9 @@
+LAMMPS (31 Mar 2017)
+  using 1 OpenMP thread(s) per MPI task
+Reading data file ...
+  orthogonal box = (0 0 0) to (81.6 70.667 100)
+  4 by 3 by 1 MPI processor grid
+  reading atoms ...
+  11696 atoms
+ERROR: Did not assign all atoms correctly (../read_data.cpp:1109)
+Last command: read_data data.OEG6
