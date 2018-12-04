@@ -35,7 +35,7 @@ def main():
         os.system(cmd)
     except:
         scriptName, surface, molClass, mol, thistab = sys.argv
-        run(mol, surface, molClass)
+        runAll(mol, surface, molClass)
     # try:
     #     print "trying"
     #     scriptName, surface, molClass, mol= sys.argv
@@ -53,28 +53,30 @@ def main():
 
 def resultPath(mol, molClass):
     target = resPath + molClass + "/" + mol + "/"
-    if (not (os.path.exists(target))):   
+    if (not (os.path.exists(target))):
+        print "making dir: " + target   
         os.mkdir(target)
     # else:
+    print "changing dir: " + target
     os.chdir(target)
     # return target
 
 
-def run(mol, surface, molClass):
+def runAll(mol, surface, molClass):
     resultPath(mol,molClass)
     au_a = 4.06 # Lattice constant of gold
     relative_coverage = 1.0
     Density = 21.6*relative_coverage # Angstroms^2/chain
     GOLD_Obj = Surface.Surface(data.getSurface(surface)) # Make gold "Surface Object"
-    SAM_Obj = Molecule.Molecule(mol) # Make Molecular objects
-    SAM_Obj.UnConverged = True
+    Mol_Obj = Molecule.Molecule(mol, data.getMol(mol, molClass)) # Make Molecular objects
+    Mol_Obj.UnConverged = True
     Box_Length = GOLD_Obj.Box_Length
     Area = Box_Length[0]*Box_Length[1]
     Num_SAMs = int(np.sqrt(Area/Density))
-    SAM_Obj.Set_Up_FF(run_orca=True, local = True)# Parameterize Molecule Object
-    OPLS.Assign_OPLS(SAM_Obj, ChelpG = False) # Parameterize Molecule Object
+    Mol_Obj.Set_Up_FF(run_orca=True, local = True)# Parameterize Molecule Object
+    OPLS.Assign_OPLS(Mol_Obj, ChelpG = False) # Parameterize Molecule Object
     OPLS.Assign_OPLS(GOLD_Obj, ChelpG = False) # Parametrize Au slab
-    SAM_System = SAM.SAM(SAM_Obj, GOLD_Obj, Num_SAMs, Box_Length, mol)
+    SAM_System = SAM.SAM(Mol_Obj, GOLD_Obj, Num_SAMs, Box_Length, mol)
     SAM_System.Gen_SAM()
     SAM_System.Write_LAMMPS_Data()
     SAM_System.Run_Lammps_Init()

@@ -1,0 +1,60 @@
+processors 4 3 1 
+units    real    # angstroms,kCal/mol,Daltons,Kelvin
+atom_style	 full    # select column format for Atoms section
+bond_style	 harmonic        #parameters needed: k_bond, r0
+angle_style	 harmonic        #parameters needed: k_theta, theta0
+dihedral_style   opls
+special_bonds lj/coul 0 0 .5
+improper_style   cvff
+kspace_style     ewald 1e-4     # long-range electrostatics sum method
+kspace_modify slab nozforce
+read_restart restart.OEG7_400_3
+
+pair_style hybrid/overlay lj/cut/coul/long 12.0 morse 12.0
+pair_coeff 1 1 lj/cut/coul/long 0.390 4.250
+pair_coeff 2 2 lj/cut/coul/long 0.066 3.500
+pair_coeff 3 3 lj/cut/coul/long 0.066 3.500
+pair_coeff 4 4 lj/cut/coul/long 0.170 3.000
+pair_coeff 5 5 lj/cut/coul/long 0.066 3.500
+pair_coeff 6 6 lj/cut/coul/long 0.030 2.500
+pair_coeff 7 7 lj/cut/coul/long 0.039 2.935
+
+
+pair_modify pair lj/cut/coul/long mix geometric
+pair_coeff  1 7 morse 8.763 1.47 2.65
+neighbor 10.0 bin
+neigh_modify every 1 delay 0 one 30000 page 300000
+
+group gold type 7
+group dynamic type 1 2 3 4 5 6 
+fix 4 gold setforce 0.0 0.0 0.0
+#min_style cg
+#min_modify line forcezero
+#minimize 1.0e-4 1.0e-6 100 1000
+#region DELR block 0 81 0 70 24 60
+#group DEL region DELR
+#group DEL include molecule
+#delete_atoms group DEL bond yes
+
+
+
+timestep 1
+thermo 1000
+thermo_style custom step temp density etotal ke pe ebond eangle edihed eimp evdwl ecoul elong vol enthalpy
+run_style verlet
+
+
+fix SH all shake 0.0001 20 0 m 1.008
+dump 1 all custom 100000 OEG7_4.lammpstrj id type mol xs ys zs ix iy iz
+#fix walllo dynamic wall/lj93 zlo EDGE 100.0 1.0 50.0
+
+fix loadbalance all balance 1000 1.05 shift z 10 1.05
+#fix 0 dynamic langevin 0. 300. 100.0 43294
+fix 0 dynamic nvt temp 400 300 100.0
+fix 3 dynamic momentum 100 linear 1 1 1
+fix walllo dynamic wall/lj93 zlo EDGE 100.0 1.0 50.0
+fix wallref dynamic wall/reflect zlo 6.7 units box
+timestep 1
+thermo 100
+run 5000000
+write_restart restart.OEG7_300_4

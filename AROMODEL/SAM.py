@@ -10,7 +10,7 @@ import Configure
 import Parallel
 import pickle
 import Bond
-import dataReader
+import DataFilesHandler
 # Class defining an MD system for simulation of SAMS with LAMMPS
 
 class SAM(object):
@@ -328,14 +328,15 @@ class SAM(object):
 
 
 
-    def Run_Lammps_NPT(self, GPU = False, Temp_Out = 0.0, time_steps = 1500000, Nodes = 1):
+    def Run_Lammps_NPT(self, GPU = False, Temp_Out = 0.0, time_steps = 1500000, Nodes = 1, count=None):
         """
             Function for running NPT dynamics for the system in lammps
         
         """
         Temp_In = self.Temperature
-        count = int(self.Current_Restart.split('_')[-1])
-        count += 1
+        if (count==None):
+            count = int(self.Current_Restart.split('_')[-1])
+            count += 1
         NPT_Temp = Configure.Template_Path + "in.SAM_NPT_Temp"
         NPT_In = "in.NPT_%s_%d_%d" % (self.Name, count, Temp_In)
         Sim_Name = NPT_In.split('.')[-1]

@@ -9,7 +9,22 @@ import Dihedral
 import Improper
 import Molecule
 import Configure
+import DataFilesHandler
 
+def get_partial_charges(molclass, mol):
+        Mol = Molecule.Molecule(mol, DataFilesHandler.getMol(mol, molclass))
+        Mol.UnConverged = True
+        Mol.Set_Up_FF(run_orca = False, molclass = molclass, mol = mol)
+        Assign_OPLS(Mol, ChelpG = False) # Parameterize Molecule Object
+        partial_charges = []
+        OPLS_Types = []
+        for Atom in Mol.Atom_List:
+            if (Atom.OPLS_Type) in OPLS_Types:
+                continue
+            else:
+                partial_charges.append((Atom.Element, Atom.Charge))
+                OPLS_Types.append(Atom.OPLS_Type)
+        return partial_charges
 
 def Assign_OPLS(Molecule, ChelpG = True):
     # Assign OPLS TYPES and CLASSES

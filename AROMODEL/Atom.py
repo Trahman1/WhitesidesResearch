@@ -3,9 +3,18 @@
 
 # Import relevant modules
 import numpy as np
+import Logger
 # Atom Class
 
-Mass_Dict = {"C":12.011, "H":1.008, "Cl":35.453, "Si":28.086, "O":15.9994, "S":32.06, "F":18.998, "N":14.007, "Au":196.96, "Zn":65.39}
+Mass_Dict = {"C": 12.011, "H": 1.008, "Cl":35.453, "Si":28.086, "O":15.9994, "S":32.06, "F":18.998, "N":14.007, "Au":196.96, "Zn":65.39}
+
+
+logger = Logger.Logger("Atom")
+
+
+def log(s):
+    logger.log(s)
+
 
 class Atom(object):
     """
@@ -42,7 +51,7 @@ class Atom(object):
 
 
 def Find_OPLS_ID(Atom, Fullerene):
-    # Funcition for assigning OPLS Types and Classes based on connectivity of the atom
+    # Function for assigning OPLS Types and Classes based on connectivity of the atom
     if Atom.Element == "C":
         Temp_Bond_List = sorted([ Atomobj.Element for Atomobj in Atom.Bond_List ])
         if len(Temp_Bond_List) == 3:
@@ -215,7 +224,7 @@ def Find_OPLS_ID(Atom, Fullerene):
                 Atom.OPLS_Type = 908
                 Atom.OPLS_Class = 16
         if len(Temp_Bond_List) == 1 and Temp_Bond_List == ['C']:
-            print "Found a thiol to bond to gold!"
+            log("Found a thiol to bond to gold!")
             Atom.OPLS_Type = 916
             Atom.OPLS_Class = 111
     elif Atom.Element == "N":
@@ -231,7 +240,6 @@ def Find_OPLS_ID(Atom, Fullerene):
     elif Atom.Element == "Au":
         Atom.OPLS_Class = 112
         Atom.OPLS_Type = 917
-                
 
     return Fullerene
 

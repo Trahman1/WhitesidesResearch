@@ -14,15 +14,26 @@ Template_Path = Aromodel_Path + "/Templates/"
 DataFiles_Path = Aromodel_Path + "/DataFiles/"
 SurfaceFiles_Path = DataFiles_Path + "SurfaceFiles/"
 MolFiles_Path = DataFiles_Path + "MolFiles/"
-
 Results_Path = Research_Path + "/Results/"
+Queue_Path = Research_Path + "/Queue"
+Ovito_Path = Aromodel_Path + "/Ovito/"
+Ovito_Views_Path = Ovito_Path+"Views/"
+Ovito_Scripts_Path = Ovito_Path+"Scripts/"
+Ovito_Print_Path = Ovito_Scripts_Path+"print.py"
+Ovitos_Path = "~/../../Applications/Ovito.app/Contents/MacOS/ovitos"
 
-def resultPath(mol, molClass):
-    target = resPath + molClass + "/" + mol + "/"
-    if (not (os.path.exists(target))):   
-        os.mkdir(target)
-    # else:
-    os.chdir(target)
+def molResultsPath(mol_class, mol):
+	return Results_Path + mol_class + "/" + mol + "/"
+
+def molGraphsPath(mol_class, mol):
+	return molResultsPath(mol_class, mol) + "Graphs/"
+
+def molPrintsPath(mol_class, mol):
+	return molResultsPath(mol_class, mol) + "Prints/"
+
+def molVideosPath(mol_class, mol):
+	return molResultsPath(mol_class, mol) + "Videos/"
+
 
 # Remote Paths
 Comet_Login = "trahman2@comet.sdsc.edu"

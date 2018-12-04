@@ -18,7 +18,7 @@ import Ring
 import Configure
 import matplotlib.pyplot as plt
 import Lammps
-import DataFilesHandler as data
+import DataFilesHandler
 
 class Molecule(object):
     """
@@ -37,17 +37,13 @@ class Molecule(object):
         UnConverged = Flag for bypassing Orca convergence (Default = False)
     """
 
-    def __init__(self, Name):
+    def __init__(self, Name, File, Atom_List = None):
 
         self.Name = Name
-        self.File_Name = data.getMol(Name)
-
-        File = open(self.File_Name,'r') # File_Name is the name of an .xyz file outputted by Avogadro
-        File_Lines = File.readlines()
+        self.File_Name = File
         
         # Define Instance Variables
-        self.N = int(File_Lines[0].strip('\n')) # Integer
-        self.Atom_List = np.empty(self.N, dtype=object) # Numpy object array
+        
         self.Bond_List = []
         self.Angle_List = []
         self.Dihedral_List = []
@@ -60,17 +56,30 @@ class Molecule(object):
         self.UnConverged = False # Unconverged Orca Optimization
         self.radius = 0.0
         self.Molecule = True 
+
+        if Atom_List is None:
+            File = open(self.File_Name,'r') # File_Name is the name of an .xyz file outputted by Avogadro
+            File_Lines = File.readlines()
+            self.N = int(File_Lines[0].strip('\n')) # Integer
+            self.Atom_List = np.empty(self.N, dtype=object) # Numpy object array
+            for i in range(self.N):
+                Line = File_Lines[2+i]
+                Line = Line.strip('\n').split()
+                Element = Line[0]
+                Position = np.array( [ float(Line[1]), float(Line[2]), float(Line[3]) ], dtype=float )
+                self.Atom_List[i] = Atom.Atom(Position, Element, i+1) # Instantiate Atom_List with Atom objects
+                self.MW += self.Atom_List[i].Mass
+        else:
+            self.N = len(Atom_List)
+            self.Atom_List = Atom_List
+            for atom in self.Atom_List:
+                self.MW += atom.Mass
+
         print "Setting up molecule"
         print "Molecule Name:", self.Name
         print self.N, "Atoms in ", self.Name
         print "----------------------------------"
-        for i in range(self.N):
-            Line = File_Lines[2+i]
-            Line = Line.strip('\n').split()
-            Element = Line[0]
-            Position = np.array( [ float(Line[1]), float(Line[2]), float(Line[3]) ], dtype=float )
-            self.Atom_List[i] = Atom.Atom(Position, Element, i+1) # Instantiate Atom_List with Atom objects
-            self.MW += self.Atom_List[i].Mass
+        
         
         print "Initial XYZ Coordinates:\n"
         for Atom_Obj in self.Atom_List:
@@ -146,7 +155,9 @@ class Molecule(object):
         return
 
 
-    def Set_Up_FF(self, run_orca=True, local= True):
+    def Set_Up_FF(self, run_orca=True, local= True, molclass = None, mol = None):
+        if ((molclass is not None) and (mol is not None)):
+            os.chdir(Configure.molResultsPath(molclass, mol))
         if run_orca:
             print "Setting up Orca input script"
             # Write Orca Input File

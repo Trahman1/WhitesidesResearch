@@ -1,21 +1,20 @@
 # !/usr/bin/python
 
-from Configure import MolFiles_Path as mfPath
-from Configure import SurfaceFiles_Path as sfPath
+import Configure 
 
 # returns surface file and returns .data
 def getSurface(surfaceName):
 	if (surfaceName == "gold"):
-		return sfPath + "gold.data"
+		return Configure.SurfaceFiles_Path + "gold.data"
 	else:
-		return sfPath + surfaceName + ".data" 
+		return Configure.SurfaceFiles_Path + surfaceName + ".data" 
 
 def getGoldSurface():
 	return getSurface("gold")
 
 # returns mol file and appends .xyz
-def getMol(molName):
-	if (molName[:3] == "OEG"):
-		return mfPath + "OEG/" + molName + ".xyz"
-	else:
-		return mfPath + molName + ".xyz"
+def getMol(molName, molClass):
+	return Configure.MolFiles_Path + molClass + "/" + molName + ".xyz"
+
+def getTraj(molName,molClass,TrajNumber):
+	return Configure.Results_Path + molClass + "/" + molName + "/" + molName + "_" + TrajNumber + ".lammpstrj"

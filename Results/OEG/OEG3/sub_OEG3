@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=12
 #SBATCH -t 48:00:00
-#SBATCH -A csd588
+#SBATCH -A csd598
 module load lammps
 cd /oasis/scratch/comet/trahman2/temp_project/Aromodel/OEG3
 export OMP_NUM_THREADS=1

@@ -28,7 +28,7 @@ class Bond(object):
         self.System_ID = 0
         return
     def print_info(self):
-        print self.Bond_Master.System_ID, self.Bond_Slave.System_ID
+        print(self.Bond_Master.System_ID, self.Bond_Slave.System_ID)
         return
 
 
