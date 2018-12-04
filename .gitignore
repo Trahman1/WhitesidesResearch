@@ -1,0 +1,9 @@
+# ignore images and videos
+*.png
+*.gif
+
+# ignore logs
+log.txt
+
+# ignore venv
+/venv/
