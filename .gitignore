@@ -5,8 +5,5 @@
 # ignore logs
 log.txt
 
-# ignore venv
-/venv/
-
 # ignore trajfiles
-/Results/
+Results/
